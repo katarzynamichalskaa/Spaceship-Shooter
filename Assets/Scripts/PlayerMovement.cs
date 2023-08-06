@@ -4,6 +4,10 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] float scrollSpeed = 15f;
     [SerializeField] float maxHorizontalOffset = 1f;
+    [SerializeField] float horizontalSmoothing = 0.1f;
+
+    private float currentHorizontalOffset;
+    private Vector3 targetPosition;
 
     void Update()
     {
@@ -25,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
 
         horizontalOffset = Mathf.Clamp(horizontalOffset, -maxHorizontalOffset, maxHorizontalOffset);
 
-        transform.position = new Vector3(horizontalOffset, transform.position.y, transform.position.z);
+        currentHorizontalOffset = Mathf.Lerp(currentHorizontalOffset, horizontalOffset, horizontalSmoothing);
+        transform.position = new Vector3(currentHorizontalOffset, transform.position.y, transform.position.z);
     }
 }
