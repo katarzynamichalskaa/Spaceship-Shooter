@@ -5,10 +5,15 @@ using UnityEngine;
 public class Shooting : MonoBehaviour
 {
     [SerializeField] GameObject bulletPrefab;
+    [SerializeField] List<GameObject> weapons = new List<GameObject>();
     Transform leftGun;
     Transform rightGun;
     GameObject rocekts;
+    GameObject autocanons;
+    GameObject zapper;
     Animator animator;
+    Animator animator1;
+    Animator animator2;
     float bulletSpeed = 20f;
     float shootInterval = 0.5f;
     float lastShootTime;
@@ -16,7 +21,13 @@ public class Shooting : MonoBehaviour
     void Start()
     {
         rocekts = GameObject.Find("Rockets");
-        rocekts.SetActive(false);
+        weapons.Add(rocekts);
+        autocanons = GameObject.Find("AutoCanons");
+        weapons.Add(autocanons);
+        zapper = GameObject.Find("Zapper");
+        weapons.Add(zapper);
+
+        SetActive(weapons, false);
 
         leftGun = GameObject.Find("LeftWing").GetComponent<Transform>();
         rightGun = GameObject.Find("RightWing").GetComponent<Transform>();
@@ -27,14 +38,28 @@ public class Shooting : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && Time.time > lastShootTime + shootInterval)
         {
             Shoot();
-            animator.enabled = true;
             lastShootTime = Time.time;
         }
 
-        if(ShopManager.rocketsBought)
+        if (ShopManager.rocketsBought)
         {
-            ChangeWeapon();
+            ChangeWeapon(animator, rocekts);
+            SetActive(weapons, false, rocekts);
             ShopManager.rocketsBought = false;
+        }
+        else if(ShopManager.autocanonsBought)
+        {
+            ChangeWeapon(animator1, autocanons);
+            SetActive(weapons, false, autocanons);
+
+            ShopManager.autocanonsBought = false;
+        }
+        else if(ShopManager.zapperBought)
+        {
+            ChangeWeapon(animator2, zapper);
+            SetActive(weapons, false, zapper);
+
+            ShopManager.zapperBought = false;
         }
     }
 
@@ -48,14 +73,25 @@ public class Shooting : MonoBehaviour
         Rigidbody2D rbRight = bulletRight.GetComponent<Rigidbody2D>();
         rbRight.velocity = rightGun.up * bulletSpeed;
 
-        animator.enabled = false;
-
     }
 
-    public void ChangeWeapon()
+    public void ChangeWeapon(Animator animator, GameObject weapon)
     {
-        rocekts.SetActive(true);
-        animator = rocekts.GetComponent<Animator>();
-        animator.enabled = false;
+        animator = weapon.GetComponent<Animator>();
+        animator.enabled = true;
+        weapon.SetActive(true);
+    }
+
+    public void SetActive(List<GameObject> list, bool active, GameObject gm = null)
+    {
+        foreach (GameObject gameObject in list)
+        {
+            gameObject.SetActive(active);
+        }
+
+        if(gm != null)
+        {
+            gm.SetActive(true);
+        }
     }
 }
