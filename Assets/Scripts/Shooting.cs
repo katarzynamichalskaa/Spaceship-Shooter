@@ -1,36 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class Shooting : MonoBehaviour
 {
     [SerializeField] GameObject bulletPrefab;
-    [SerializeField] List<GameObject> weapons = new List<GameObject>();
-    Transform leftGun;
-    Transform rightGun;
-    GameObject rocekts;
-    GameObject autocanons;
-    GameObject zapper;
-    Animator animator;
-    Animator animator1;
-    Animator animator2;
-    float bulletSpeed = 20f;
-    float shootInterval = 0.5f;
+    [SerializeField] GameObject autocanonsBulletPrefab;
+    [SerializeField] GameObject zapperBulletPrefab;
     float lastShootTime;
+    float shootInterval = 0.5f;
+    float bulletSpeed = 20f;
+    bool changed = true;
+    string[] wingsNames = { "LeftWing", "RightWing", "RocketLeftWing", "RocketRightWing", "RocketLeftWingWing", "RocketRightWingWing" };
+    string[] weaponNames = { "Rockets", "AutoCanons", "Zapper" };
+
+    [SerializeField] List<GameObject> weapons = new List<GameObject>();
+    [SerializeField] List<Transform> bulletSpawn = new List<Transform>();
+    [SerializeField] List<Animator> animators = new List<Animator>();
+
+    public enum EquippedWeapon { None, Rockets, Autocanons, Zapper }
+
+    private EquippedWeapon currentWeapon = EquippedWeapon.None;
 
     void Start()
     {
-        rocekts = GameObject.Find("Rockets");
-        weapons.Add(rocekts);
-        autocanons = GameObject.Find("AutoCanons");
-        weapons.Add(autocanons);
-        zapper = GameObject.Find("Zapper");
-        weapons.Add(zapper);
+        AddToList(wingsNames, weaponNames);
 
         SetActive(weapons, false);
 
-        leftGun = GameObject.Find("LeftWing").GetComponent<Transform>();
-        rightGun = GameObject.Find("RightWing").GetComponent<Transform>();
+        changed = true;
+
     }
 
     void Update()
@@ -41,46 +41,77 @@ public class Shooting : MonoBehaviour
             lastShootTime = Time.time;
         }
 
-        if (ShopManager.rocketsBought)
+        if (Time.time > lastShootTime + shootInterval)
         {
-            ChangeWeapon(animator, rocekts);
-            SetActive(weapons, false, rocekts);
-            ShopManager.rocketsBought = false;
+            DeactivateAnimations();
         }
-        else if(ShopManager.autocanonsBought)
-        {
-            ChangeWeapon(animator1, autocanons);
-            SetActive(weapons, false, autocanons);
 
-            ShopManager.autocanonsBought = false;
-        }
-        else if(ShopManager.zapperBought)
+        if (ShopManager.rocketsEquiped && changed)
         {
-            ChangeWeapon(animator2, zapper);
-            SetActive(weapons, false, zapper);
-
-            ShopManager.zapperBought = false;
+            SetActive(weapons, false, weapons[0]);
+            currentWeapon = EquippedWeapon.Rockets;
+            changed = false;
         }
+        if (ShopManager.autocanonsEquiped && changed)
+        {
+            SetActive(weapons, false, weapons[1]);
+            currentWeapon = EquippedWeapon.Autocanons;
+            changed = false;
+        }
+        if (ShopManager.zapperEquiped && changed)
+        {
+            SetActive(weapons, false, weapons[2]);
+            currentWeapon = EquippedWeapon.Zapper;
+            changed = false;
+        }
+
     }
 
     void Shoot()
     {
-        GameObject bulletLeft = Instantiate(bulletPrefab, leftGun.position, leftGun.rotation);
-        Rigidbody2D rbLeft = bulletLeft.GetComponent<Rigidbody2D>();
-        rbLeft.velocity = leftGun.up * bulletSpeed;
+        if (currentWeapon == EquippedWeapon.None)
+        {
+            bulletSpeed = 20f;
+            PrepareBullets(bulletSpeed, bulletPrefab, 1);
 
-        GameObject bulletRight = Instantiate(bulletPrefab, rightGun.position, rightGun.rotation);
-        Rigidbody2D rbRight = bulletRight.GetComponent<Rigidbody2D>();
-        rbRight.velocity = rightGun.up * bulletSpeed;
+        }
+
+        if (currentWeapon == EquippedWeapon.Rockets)
+        {
+            PrepareBullets(bulletSpeed, bulletPrefab, bulletSpawn.Count);
+            animators[0].enabled = true;
+            animators[0].speed = 2.5f;
+
+        }
+        if (currentWeapon == EquippedWeapon.Autocanons)
+        {
+            shootInterval = 0.4f;
+            PrepareBullets(bulletSpeed, autocanonsBulletPrefab, 1);
+            animators[1].enabled = true;
+            animators[1].speed = 2f;
+
+        }
+        if (currentWeapon == EquippedWeapon.Zapper)
+        {
+            shootInterval = 0.35f;
+            bulletSpeed = 25f;
+            PrepareBullets(bulletSpeed, zapperBulletPrefab, 1);
+            animators[2].enabled = true;
+            animators[2].speed = 2.75f;
+
+        }
+
 
     }
 
-    public void ChangeWeapon(Animator animator, GameObject weapon)
+    void PrepareBullets(float bulletSpeed, GameObject bulletPrefab, int stopIterating)
     {
-        animator = weapon.GetComponent<Animator>();
-        animator.enabled = true;
-        weapon.SetActive(true);
+        for (int i = 0; i < bulletSpawn.Count && i <= stopIterating; i++)
+        {
+            StartCoroutine(CreateBulletWithDelay(bulletSpeed, bulletPrefab, bulletSpawn[i].transform, i));
+        }
     }
+
 
     public void SetActive(List<GameObject> list, bool active, GameObject gm = null)
     {
@@ -89,9 +120,63 @@ public class Shooting : MonoBehaviour
             gameObject.SetActive(active);
         }
 
-        if(gm != null)
+        if (gm != null)
         {
-            gm.SetActive(true);
+            gm.SetActive(!active);
         }
+    }
+
+    void AddToList(string[] wings, string[] weaponsTable)
+    {
+        foreach (string obj in wings)
+        {
+            Transform transform = GameObject.Find(obj).GetComponent<Transform>();
+            bulletSpawn.Add(transform);
+        }
+        foreach (string obj in weaponsTable)
+        {
+            GameObject gm = GameObject.Find(obj);
+            animators.Add(gm.GetComponent<Animator>());
+            weapons.Add(gm);
+        }
+
+    }
+
+    void DeactivateAnimations()
+    {
+        foreach (GameObject weapon in weapons)
+        {
+            Animator animator = weapon.GetComponent<Animator>();
+            if (animator != null)
+            {
+                animator.Rebind();
+            }
+        }
+    }
+
+    IEnumerator CreateBulletWithDelay(float bulletSpeed, GameObject bulletPrefab, Transform spawnTransform, int index)
+    {
+        float delay = 0f;
+
+        if(currentWeapon == EquippedWeapon.Rockets && (index == 0 || index == 1))
+        {
+            delay = 0.15f;
+        }
+
+        if (index == 2 || index == 3)
+        {
+            delay = 0f;
+        }
+        else if (index == 4 || index == 5)
+        {
+            delay = 0.3f;
+        }
+
+        yield return new WaitForSeconds(delay);
+
+        GameObject bullet = Instantiate(bulletPrefab, spawnTransform.position, spawnTransform.rotation);
+        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+        rb.velocity = spawnTransform.up * bulletSpeed;
+
     }
 }

@@ -6,13 +6,13 @@ using UnityEngine.UI;
 
 public class ShopManager : MonoBehaviour
 {
-    private const string RocketsBoughtKey = "RocketsBought";
-    private const string AutocanonsBoughtKey = "AutocanonsBought";
-    private const string ZapperBoughtKey = "ZapperBought";
-
     public static bool rocketsBought = false;
     public static bool autocanonsBought = false;
     public static bool zapperBought = false;
+    
+    public static bool rocketsEquiped = false;
+    public static bool autocanonsEquiped = false;
+    public static bool zapperEquiped = false;
 
     Text rocketPrice;
     Text autocanonsPrice;
@@ -21,10 +21,6 @@ public class ShopManager : MonoBehaviour
 
     private void Start()
     {
-        rocketsBought = PlayerPrefs.GetInt(RocketsBoughtKey, 0) == 1;
-        autocanonsBought = PlayerPrefs.GetInt(AutocanonsBoughtKey, 0) == 1;
-        zapperBought = PlayerPrefs.GetInt(ZapperBoughtKey, 0) == 1;
-
         rocketPrice = GameObject.Find("RocketPrice").GetComponent<Text>();
         autocanonsPrice = GameObject.Find("AutocanonsPrice").GetComponent<Text>();
         zapperPrice = GameObject.Find("ZapperPrice").GetComponent<Text>();
@@ -37,43 +33,47 @@ public class ShopManager : MonoBehaviour
 
     public void BuyRockets()
     {
-        if (!rocketsBought)
+        if(rocketsBought)
         {
-            rocketsBought = true;
-            PlayerPrefs.SetInt(RocketsBoughtKey, 1);
+            autocanonsEquiped = false;
+            zapperEquiped = false;
+            rocketsEquiped = true;
         }
 
-        if (rocketsBought)
+        else
         {
-            //Equip
+            rocketsBought = true;
         }
+
     }
 
     public void BuyAutoCanons()
     {
-        if (!autocanonsBought)
-        {
-            autocanonsBought = true;
-            PlayerPrefs.SetInt(AutocanonsBoughtKey, 1);
-        }
-
         if (autocanonsBought)
         {
-            //Equip
+            autocanonsEquiped = true;
+            zapperEquiped = false;
+            rocketsEquiped = false;
+        }
+
+        else
+        {
+            autocanonsBought = true;
         }
     }
 
     public void BuyZapper()
     {
-        if (!zapperBought)
-        {
-            zapperBought = true;
-            PlayerPrefs.SetInt(ZapperBoughtKey, 1);
-        }
-
         if (zapperBought)
         {
-            //Equip
+            autocanonsEquiped = false;
+            zapperEquiped = true;
+            rocketsEquiped = false;
+        }
+
+        else
+        {
+            zapperBought = true;
         }
     }
 
