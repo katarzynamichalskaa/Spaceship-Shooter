@@ -93,11 +93,11 @@ public class Shooting : MonoBehaviour
         }
         if (currentWeapon == EquippedWeapon.Zapper)
         {
-            shootInterval = 0.35f;
-            bulletSpeed = 25f;
+            shootInterval = 0.3f;
+            bulletSpeed = 20f;
             PrepareBullets(bulletSpeed, zapperBulletPrefab, 1);
             animators[2].enabled = true;
-            animators[2].speed = 2.75f;
+            animators[2].speed = 3f;
 
         }
 
@@ -157,7 +157,15 @@ public class Shooting : MonoBehaviour
     IEnumerator CreateBulletWithDelay(float bulletSpeed, GameObject bulletPrefab, Transform spawnTransform, int index)
     {
         float delay = 0f;
+        Vector3 offset = new Vector3(0f, 0f, 0f);
 
+        //zapper
+        if (currentWeapon == EquippedWeapon.Zapper)
+        {
+            offset = new Vector3(0f, 1f, 0f);
+        }
+
+        //rockets 
         if(currentWeapon == EquippedWeapon.Rockets && (index == 0 || index == 1))
         {
             delay = 0.15f;
@@ -174,7 +182,8 @@ public class Shooting : MonoBehaviour
 
         yield return new WaitForSeconds(delay);
 
-        GameObject bullet = Instantiate(bulletPrefab, spawnTransform.position, spawnTransform.rotation);
+        //any type of weapon
+        GameObject bullet = Instantiate(bulletPrefab, spawnTransform.position + offset, spawnTransform.rotation);
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         rb.velocity = spawnTransform.up * bulletSpeed;
 
