@@ -8,6 +8,7 @@ public class Shooting : MonoBehaviour
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] GameObject autocanonsBulletPrefab;
     [SerializeField] GameObject zapperBulletPrefab;
+    HealthManager healthManager;
     float lastShootTime;
     float shootInterval = 0.5f;
     float bulletSpeed = 20f;
@@ -29,40 +30,49 @@ public class Shooting : MonoBehaviour
 
         SetActive(weapons, false);
 
+        healthManager = GameObject.Find("Player").GetComponent<HealthManager>();
+
         changed = true;
 
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && Time.time > lastShootTime + shootInterval)
+        if(HealthManager.ReturnCurrentHealth() <= 0)
         {
-            Shoot();
-            lastShootTime = Time.time;
+            Time.timeScale = 0f;
         }
+        else
+        {
+            if (Input.GetMouseButtonDown(0) && Time.time > lastShootTime + shootInterval)
+            {
+                Shoot();
+                lastShootTime = Time.time;
+            }
 
-        if (Time.time > lastShootTime + shootInterval)
-        {
-            DeactivateAnimations();
-        }
+            if (Time.time > lastShootTime + shootInterval)
+            {
+                DeactivateAnimations();
+            }
 
-        if (ShopManager.rocketsEquiped && changed)
-        {
-            SetActive(weapons, false, weapons[0]);
-            currentWeapon = EquippedWeapon.Rockets;
-            changed = false;
-        }
-        if (ShopManager.autocanonsEquiped && changed)
-        {
-            SetActive(weapons, false, weapons[1]);
-            currentWeapon = EquippedWeapon.Autocanons;
-            changed = false;
-        }
-        if (ShopManager.zapperEquiped && changed)
-        {
-            SetActive(weapons, false, weapons[2]);
-            currentWeapon = EquippedWeapon.Zapper;
-            changed = false;
+            if (ShopManager.rocketsEquiped && changed)
+            {
+                SetActive(weapons, false, weapons[0]);
+                currentWeapon = EquippedWeapon.Rockets;
+                changed = false;
+            }
+            if (ShopManager.autocanonsEquiped && changed)
+            {
+                SetActive(weapons, false, weapons[1]);
+                currentWeapon = EquippedWeapon.Autocanons;
+                changed = false;
+            }
+            if (ShopManager.zapperEquiped && changed)
+            {
+                SetActive(weapons, false, weapons[2]);
+                currentWeapon = EquippedWeapon.Zapper;
+                changed = false;
+            }
         }
 
     }

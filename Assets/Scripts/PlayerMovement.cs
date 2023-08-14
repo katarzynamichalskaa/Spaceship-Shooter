@@ -5,14 +5,27 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float scrollSpeed = 15f;
     [SerializeField] float maxHorizontalOffset = 1f;
     [SerializeField] float horizontalSmoothing = 0.1f;
-
+    HealthManager healthManager;
     private float currentHorizontalOffset;
     private Vector3 targetPosition;
 
+    void Start()
+    {
+        healthManager = GameObject.Find("Player").GetComponent<HealthManager>();
+
+    }
+
     void Update()
     {
-        MoveForward();
-        MoveSideways();
+        if (HealthManager.ReturnCurrentHealth() <= 0)
+        {
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            MoveForward();
+            MoveSideways();
+        }
     }
 
     void MoveForward()
