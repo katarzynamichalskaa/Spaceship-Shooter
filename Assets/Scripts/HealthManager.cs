@@ -13,12 +13,11 @@ public class HealthManager : MonoBehaviour
     SpriteRenderer spriteRenderer;
     List<GameObject> hearts = new List<GameObject>();
     string[] heartNames = { "Hearth1", "Hearth2", "Hearth3"};
-
+    ScoreManager scoreManager;
     float invulnerabilityDuration = 1.5f;
     int maxHealth = 3;
     static int currentHealth;
     bool isInvulnerable = false;
-    int timeToCount = 5;
 
     private void Start()
     {
@@ -27,8 +26,10 @@ public class HealthManager : MonoBehaviour
         //sprite without any damage
         spriteRenderer.sprite = sprites[3];
         menu = GameObject.Find("Menu").GetComponent<Button>();
+        scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
         currentHealth = maxHealth;
         AddToList(heartNames);
+        rewardedAdsButton.SetActive(false);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -77,6 +78,7 @@ public class HealthManager : MonoBehaviour
         rewardedAdsButton.SetActive(true);
         Time.timeScale = 0f;
         menu.gameObject.SetActive(false);
+        scoreManager.ConvertScoreToMoney();
     }
 
     private void ResetInvulnerability()
@@ -121,5 +123,11 @@ public class HealthManager : MonoBehaviour
     public static int ReturnCurrentHealth()
     {
         return currentHealth;
+    }
+
+    public void Reset()
+    {
+        currentHealth = 3;
+
     }
 }

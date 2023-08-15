@@ -44,6 +44,8 @@ public class Shooting : MonoBehaviour
         }
         else
         {
+            Time.timeScale = 1f;
+
             if (Input.GetMouseButtonDown(0) && Time.time > lastShootTime + shootInterval)
             {
                 Shoot();

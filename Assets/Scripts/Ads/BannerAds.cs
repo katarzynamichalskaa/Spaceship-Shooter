@@ -7,20 +7,30 @@ using UnityEngine.Advertisements;
 
 public class BannerAds : MonoBehaviour
 {
-    [SerializeField] BannerPosition _bannerPosition = BannerPosition.BOTTOM_CENTER;
+    public static BannerAds Instance { get; private set; }
 
+    [SerializeField] BannerPosition _bannerPosition = BannerPosition.BOTTOM_CENTER;
     [SerializeField] string _androidAdUnitId = "Banner_Android";
-    [SerializeField] string _iOSAdUnitId = "Banner_iOS";
     string _adUnitId = null; // This will remain null for unsupported platforms.
 
     void Start()
     {
         // Get the Ad Unit ID for the current platform:
-#if UNITY_IOS
+        #if UNITY_IOS
         _adUnitId = _iOSAdUnitId;
-#elif UNITY_ANDROID
+        #elif UNITY_ANDROID
         _adUnitId = _androidAdUnitId;
-#endif
+        #endif
+
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
         // Set the banner position:
         Advertisement.Banner.SetPosition(_bannerPosition);
     }

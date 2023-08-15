@@ -1,8 +1,11 @@
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
 {
+    public static int coinsEarned;
+
     [SerializeField] Text scoreText;         
     [SerializeField] float scoreIncreaseRate = 1.0f;
 
@@ -22,6 +25,8 @@ public class ScoreManager : MonoBehaviour
         if (isGameOver)
         {
             //here new scene/canvas + converting score to money
+            CancelInvoke("IncreaseScoreOverTime");
+
         }
     }
 
@@ -38,6 +43,15 @@ public class ScoreManager : MonoBehaviour
     private void UpdateScoreText()
     {
         scoreText.text =  score.ToString();
+    }
+
+    public void ConvertScoreToMoney()
+    {
+        //isGameOver = true;
+        coinsEarned = score / 100;
+
+        UnityEngine.Debug.Log($"Converted {score} score to {coinsEarned} coins.");
+
     }
 
 }

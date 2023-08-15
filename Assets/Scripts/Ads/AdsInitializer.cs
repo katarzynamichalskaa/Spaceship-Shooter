@@ -7,33 +7,60 @@ using UnityEngine.SceneManagement;
 
 public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener
 {
+    public static AdsInitializer Instance { get; private set; }
+
     [SerializeField] string _androidGameId;
-    [SerializeField] string _iOSGameId;
     [SerializeField] bool _testMode = true;
     private string _gameId;
-    string currentSceneName;
     [SerializeField] RewardedAdsButton rewardedAdsButton = null;
     [SerializeField] BannerAds bannerAds = null;
-
-    void Start()
-    {
-         currentSceneName = SceneManager.GetActiveScene().name;
-    }
+    bool firstChance = true;
 
     void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
         InitializeAds();
+    }
+
+    void Update()
+    {
+        if (SceneManager.GetActiveScene().name == "Game" && firstChance)
+        {
+            GameObject canvas = GameObject.Find("Canvas");
+            rewardedAdsButton = canvas.GetComponentInChildren<RewardedAdsButton>();
+
+            if (rewardedAdsButton != null)
+            {
+                rewardedAdsButton.LoadAd();
+                firstChance = false;
+            }
+        }
+        
+        if (SceneManager.GetActiveScene().name == "Menu")
+        {
+            firstChance = true;
+        }
     }
 
     public void InitializeAds()
     {
-    #if UNITY_IOS
+        #if UNITY_IOS
             _gameId = _iOSGameId;
-    #elif UNITY_ANDROID
+        #elif UNITY_ANDROID
             _gameId = _androidGameId;
-    #elif UNITY_EDITOR
+        #elif UNITY_EDITOR
             _gameId = _androidGameId; //Only for testing the functionality in the Editor
-    #endif
+        #endif
+
         if (!Advertisement.isInitialized && Advertisement.isSupported)
         {
             Advertisement.Initialize(_gameId, _testMode, this);
@@ -44,15 +71,12 @@ public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener
     public void OnInitializationComplete()
     {
         UnityEngine.Debug.Log("Unity Ads initialization complete.");
-
-        if(rewardedAdsButton != null && currentSceneName == "Game") 
-        {
-            rewardedAdsButton.LoadAd();
-        }
+        
         if(bannerAds != null) 
         {
             bannerAds.LoadBanner();
         }
+
     }
 
     public void OnInitializationFailed(UnityAdsInitializationError error, string message)

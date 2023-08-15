@@ -3,8 +3,8 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] float scrollSpeed = 15f;
-    [SerializeField] float maxHorizontalOffset = 1f;
-    [SerializeField] float horizontalSmoothing = 0.1f;
+    float maxHorizontalOffset = 0.25f;
+    float horizontalSmoothing = 0.85f;
     HealthManager healthManager;
     private float currentHorizontalOffset;
     private Vector3 targetPosition;
@@ -23,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
+            Time.timeScale = 1f;
             MoveForward();
             MoveSideways();
         }
@@ -43,6 +44,9 @@ public class PlayerMovement : MonoBehaviour
         horizontalOffset = Mathf.Clamp(horizontalOffset, -maxHorizontalOffset, maxHorizontalOffset);
 
         currentHorizontalOffset = Mathf.Lerp(currentHorizontalOffset, horizontalOffset, horizontalSmoothing);
-        transform.position = new Vector3(currentHorizontalOffset, transform.position.y, transform.position.z);
+
+        float clampedX = Mathf.Clamp(transform.position.x + currentHorizontalOffset, -1.7f, 1.7f);
+
+        transform.position = new Vector3(clampedX, transform.position.y, transform.position.z);
     }
 }

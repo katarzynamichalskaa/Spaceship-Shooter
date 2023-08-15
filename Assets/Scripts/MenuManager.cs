@@ -8,6 +8,16 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
+    HealthManager healthManager;
+
+    void Start()
+    {
+        if(SceneManager.GetActiveScene().name == "Game")
+        {
+            healthManager = GameObject.Find("Player").GetComponent<HealthManager>();
+        }
+    }
+
     public void QuitFromGame()
     {
         UnityEngine.Application.Quit();
@@ -25,6 +35,11 @@ public class MenuManager : MonoBehaviour
 
     public void Back()
     {
+        if(healthManager != null)
+        {
+            healthManager.Reset();
+        }
+
         SceneManager.LoadScene("Menu");
     }
 }

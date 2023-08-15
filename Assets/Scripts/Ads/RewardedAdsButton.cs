@@ -6,29 +6,38 @@ using System.Collections.Generic;
 
 public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener
 {
-    [SerializeField] Button _showAdButton;
-    [SerializeField] HealthManager healthManager;
-    [SerializeField] string _androidAdUnitId = "Rewarded_Android";
-    [SerializeField] string _iOSAdUnitId = "Rewarded_iOS";
-    string _adUnitId = null;
+    public static RewardedAdsButton Instance { get; private set; }
 
+    [SerializeField] Button _showAdButton;
+    [SerializeField] string _androidAdUnitId = "Rewarded_Android";
+    string _adUnitId = null;
+    HealthManager healthManager;
     string[] UInames = { "RewardedAdsButton", "Rewarded", "Back" };
     public List<GameObject> UI = new List<GameObject>();
 
     void Start()
     {
         AddToList(UInames, UI);
-        SetActive(false);
         _showAdButton = UI[0].GetComponent<Button>();
     }
 
     void Awake()
     {
-    #if UNITY_IOS
+        #if UNITY_IOS
         _adUnitId = _iOSAdUnitId;
-    #elif UNITY_ANDROID
+        #elif UNITY_ANDROID
         _adUnitId = _androidAdUnitId;
-    #endif
+        #endif
+
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 
         _showAdButton.interactable = false;
     }
@@ -43,11 +52,13 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
     {
         UnityEngine.Debug.Log("Ad Loaded: " + adUnitId);
 
+
         if (adUnitId.Equals(_adUnitId))
         {
             _showAdButton.onClick.AddListener(ShowAd);
             _showAdButton.interactable = true;
         }
+
     }
 
     public void ShowAd()
@@ -58,10 +69,15 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
 
     public void OnUnityAdsShowComplete(string adUnitId, UnityAdsShowCompletionState showCompletionState)
     {
-        if (adUnitId.Equals(_adUnitId) && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
+        healthManager = GameObject.Find("Player").GetComponent<HealthManager>();
+
+        if (healthManager != null)
         {
-            healthManager.PlayerReward();
-            OnDestroy();
+            if (adUnitId.Equals(_adUnitId) && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
+            {
+                healthManager.PlayerReward();
+                OnDestroy();
+            }
         }
     }
 
