@@ -42,4 +42,14 @@ public class MenuManager : MonoBehaviour
 
         SceneManager.LoadScene("Menu");
     }
+    
+    public void LoadStatisticScene()
+    {
+        if (healthManager != null)
+        {
+            healthManager.Reset();
+        }
+
+        SceneManager.LoadScene("GameOverDashboard");
+    }
 }

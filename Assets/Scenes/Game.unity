@@ -1782,7 +1782,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1102108795}
         m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: Back
+        m_MethodName: LoadStatisticScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1812,7 +1812,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 1133406319, guid: 70f1a9bd664648a4f9f43ed36594e991, type: 3}
+  m_Sprite: {fileID: 1764349920, guid: 70f1a9bd664648a4f9f43ed36594e991, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
