@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BulletDestroy : MonoBehaviour
+public class DestroyIt : MonoBehaviour
 {
     [SerializeField] float destroyDelay = 1.5f;
 

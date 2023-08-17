@@ -18,12 +18,15 @@ public class ShopManager : MonoBehaviour
     Text autocanonsPrice;
     Text zapperPrice;
 
+    MoneyManager moneyManager;
+
 
     private void Start()
     {
         rocketPrice = GameObject.Find("RocketPrice").GetComponent<Text>();
         autocanonsPrice = GameObject.Find("AutocanonsPrice").GetComponent<Text>();
         zapperPrice = GameObject.Find("ZapperPrice").GetComponent<Text>();
+        LoadBoughtAndEquipped();
     }
 
     void Update()
@@ -42,8 +45,17 @@ public class ShopManager : MonoBehaviour
 
         else
         {
-            rocketsBought = true;
+            moneyManager = GameObject.Find("MoneyManager").GetComponent<MoneyManager>();
+
+            bool purchased = moneyManager.Purchase(100000);
+            if(purchased)
+            {
+                rocketsBought = true;
+                rocketsEquiped = true;
+            }
         }
+
+        SaveBoughtAndEquipped();
 
     }
 
@@ -58,8 +70,18 @@ public class ShopManager : MonoBehaviour
 
         else
         {
-            autocanonsBought = true;
+            moneyManager = GameObject.Find("MoneyManager").GetComponent<MoneyManager>();
+
+            bool purchased = moneyManager.Purchase(2000000);
+            if(purchased)
+            {
+                autocanonsBought = true;
+                autocanonsEquiped = true;
+            }
         }
+
+        SaveBoughtAndEquipped();
+
     }
 
     public void BuyZapper()
@@ -73,17 +95,43 @@ public class ShopManager : MonoBehaviour
 
         else
         {
-            zapperBought = true;
+            moneyManager = GameObject.Find("MoneyManager").GetComponent<MoneyManager>();
+
+            bool purchased = moneyManager.Purchase(30000000);
+            if(purchased)
+            {
+                zapperBought = true;
+                zapperEquiped = true;
+            }
         }
+
+        SaveBoughtAndEquipped();
+
     }
 
     private void UpdateRocketPriceText(string priceRoc, string priceAuto, string priceZipp)
     {
         string equip = "Equip";
-
         rocketPrice.text = rocketsBought ? equip : priceRoc;
         autocanonsPrice.text = autocanonsBought ? equip : priceAuto;
         zapperPrice.text = zapperBought ? equip : priceZipp;
     }
 
+    public void SaveBoughtAndEquipped()
+    {
+        SaveSystem.SavePlayerEquipment(this);
+    }
+
+    public void LoadBoughtAndEquipped()
+    {
+        PlayerData data = SaveSystem.LoadPlayerEquipment(this);
+
+        rocketsBought = data.rocketsBought;
+        autocanonsBought = data.autocanonsBought;
+        zapperBought = data.zapperBought;
+
+        rocketsEquiped = data.rocketsEquiped;
+        autocanonsEquiped = data.autocanonsEquiped;
+        zapperEquiped = data.zapperEquiped;
+    }
 }
