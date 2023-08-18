@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement;
 
 public class ShopManager : MonoBehaviour
 {
+    public static ShopManager Instance { get; private set; }
+
     public static bool rocketsBought = false;
     public static bool autocanonsBought = false;
     public static bool zapperBought = false;
@@ -23,15 +25,32 @@ public class ShopManager : MonoBehaviour
 
     private void Start()
     {
-        rocketPrice = GameObject.Find("RocketPrice").GetComponent<Text>();
-        autocanonsPrice = GameObject.Find("AutocanonsPrice").GetComponent<Text>();
-        zapperPrice = GameObject.Find("ZapperPrice").GetComponent<Text>();
         LoadBoughtAndEquipped();
     }
 
     void Update()
     {
-        UpdateRocketPriceText("100000 $", "2000000 $", "30000000 $");
+        if (SceneManager.GetActiveScene().name == "Shop")
+        {
+            rocketPrice = GameObject.Find("RocketPrice").GetComponent<Text>();
+            autocanonsPrice = GameObject.Find("AutocanonsPrice").GetComponent<Text>();
+            zapperPrice = GameObject.Find("ZapperPrice").GetComponent<Text>();
+
+            UpdateRocketPriceText("100000 $", "2000000 $", "30000000 $");
+        }
+    }
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void BuyRockets()

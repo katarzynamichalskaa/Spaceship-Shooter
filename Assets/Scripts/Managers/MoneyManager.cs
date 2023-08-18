@@ -9,7 +9,6 @@ public class MoneyManager : MonoBehaviour
     public static MoneyManager Instance { get; private set; }
     [SerializeField] Text money;
     public static int coins = 0;
-    int earnedCoins = 0;
     int purchaseCost;
     int currentCoins;
     ScoreManager scoreManager;
@@ -51,21 +50,9 @@ public class MoneyManager : MonoBehaviour
     {
         if (scoreManager != null && SceneManager.GetActiveScene().name == "GameOverDashboard")
         {
-            earnedCoins = scoreManager.ReturnEarnedCoins();
-
-            if (coins < coins + earnedCoins)
-            {
-                coins += Mathf.RoundToInt(5f);
-                money.text = coins.ToString();
-
-            }
-            else
-            {
-                coins = earnedCoins + coins;
-                money.text = coins.ToString();
-                SaveMoney();
-
-            }
+            coins += Mathf.RoundToInt(5f);
+            money.text = coins.ToString();
+            SaveMoney();
         }
 
         else if(SceneManager.GetActiveScene().name == "Shop")

@@ -4,14 +4,21 @@ using UnityEngine;
 
 public class BackgroundLoop : MonoBehaviour
 {
-    [SerializeField] float choke;
-    [SerializeField] float scrollSpeed;
+    [SerializeField] float choke = 0.1f;
     [SerializeField] GameObject[] backgrounds;
     private Camera mainCamera;
     private Vector2 screenBounds;
+    float scrollSpeed = 10f;
+
+    private bool isFading = false;
+
+
+    float timer = 0f;
 
     void Start()
     {
+        timer = 0f;
+
         mainCamera = gameObject.GetComponent<Camera>();
         screenBounds = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, mainCamera.transform.position.z));
 
@@ -63,17 +70,40 @@ public class BackgroundLoop : MonoBehaviour
             }
         }
     }
+
     void Update()
     {
-
         MoveForward();
-
     }
+
     void LateUpdate()
     {
-        foreach (GameObject obj in backgrounds)
+        timer += Time.deltaTime;
+
+        if(timer > 0) 
         {
-            repositionChildObjects(obj);
+            foreach (GameObject obj in backgrounds)
+            {
+                repositionChildObjects(obj);
+            }
+        }
+
+        if (timer > 5 && timer < 10)
+        {
+            scrollSpeed = 12f;
+            Fade(0);
+        }
+
+        if(timer > 15 && timer < 25 )
+        {
+            scrollSpeed = 15f;
+            Fade(1);
+        }
+
+        if (timer > 30 && timer < 35)
+        {
+            scrollSpeed = 20f;
+            Fade(2);
         }
     }
 
@@ -83,5 +113,36 @@ public class BackgroundLoop : MonoBehaviour
         Vector3 desiredPosition = transform.position + new Vector3(0, scrollSpeed, 0);
         Vector3 smoothPosition = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, 0.3f);
         transform.position = smoothPosition;
+    }
+
+    private IEnumerator FadeBackgroundOut(SpriteRenderer spriteRenderer, float duration)
+    {
+        Color startColor = spriteRenderer.color;
+        Color endColor = new Color(startColor.r, startColor.g, startColor.b, 0f);
+
+        float elapsedTime = 0f;
+        while (elapsedTime < duration)
+        {
+            Color newColor = Color.Lerp(startColor, endColor, elapsedTime / duration);
+            spriteRenderer.color = newColor;
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        spriteRenderer.color = endColor;
+
+        isFading = false; 
+    }
+
+    void Fade(int index)
+    {
+        if (!isFading)
+        {
+            isFading = true;
+            foreach (SpriteRenderer spriteRenderer in backgrounds[index].GetComponentsInChildren<SpriteRenderer>())
+            {
+                StartCoroutine(FadeBackgroundOut(spriteRenderer, 5f));
+            }
+        }
     }
 }

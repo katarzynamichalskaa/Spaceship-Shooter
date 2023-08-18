@@ -79,7 +79,7 @@ public class ScoreManager : MonoBehaviour
     {
         if (score > 0)
         {
-            score -= Mathf.RoundToInt(5f);
+            score -= Mathf.RoundToInt(100f);
             UpdateScoreText();
             moneyManager.UpdateCoinText();
         }
@@ -93,7 +93,7 @@ public class ScoreManager : MonoBehaviour
 
     public int ReturnEarnedCoins()
     {
-        coinsEarned = score / 1;
+        coinsEarned = score / 100;
 
         return coinsEarned;
     }

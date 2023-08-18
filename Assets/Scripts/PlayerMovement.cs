@@ -2,21 +2,40 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] float scrollSpeed = 15f;
+    HealthManager healthManager;
+
+    float scrollSpeed = 10f;
     float maxHorizontalOffset = 0.25f;
     float horizontalSmoothing = 0.85f;
-    HealthManager healthManager;
     private float currentHorizontalOffset;
     private Vector3 targetPosition;
+    float timer = 0f;
 
     void Start()
     {
         healthManager = GameObject.Find("Player").GetComponent<HealthManager>();
-
+        timer = 0f;
     }
 
     void Update()
     {
+        timer += Time.deltaTime;
+        
+        if (timer > 5 && timer < 10)
+        {
+            scrollSpeed = 12f;
+        }
+
+        if (timer > 15 && timer < 25)
+        {
+            scrollSpeed = 15f;
+        }
+
+        if (timer > 30 && timer < 35)
+        {
+            scrollSpeed = 20f;
+        }
+
         if (HealthManager.ReturnCurrentHealth() <= 0)
         {
             Time.timeScale = 0f;

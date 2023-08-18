@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BulletBasic Variant
       objectReference: {fileID: 0}
+    - target: {fileID: -2253911629886400664, guid: 826f15b4f2b921f419fd5b093e0e2350, type: 3}
+      propertyPath: m_TagString
+      value: PlayerBullet
+      objectReference: {fileID: 0}
     - target: {fileID: 3626916397498700004, guid: 826f15b4f2b921f419fd5b093e0e2350, type: 3}
       propertyPath: m_SortingOrder
       value: 5
