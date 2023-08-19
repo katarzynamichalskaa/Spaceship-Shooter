@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Shooting : MonoBehaviour
 {
-    [SerializeField] GameObject bulletPrefab;
+    [SerializeField] protected GameObject bulletPrefab;
     [SerializeField] GameObject autocanonsBulletPrefab;
     [SerializeField] GameObject zapperBulletPrefab;
     HealthManager healthManager;
@@ -13,8 +13,8 @@ public class Shooting : MonoBehaviour
     float shootInterval = 0.5f;
     float bulletSpeed = 20f;
     bool changed = true;
-    string[] wingsNames = { "LeftWing", "RightWing", "RocketLeftWing", "RocketRightWing", "RocketLeftWingWing", "RocketRightWingWing" };
-    string[] weaponNames = { "Rockets", "AutoCanons", "Zapper" };
+    protected string[] wingsNames = { "LeftWing", "RightWing", "RocketLeftWing", "RocketRightWing", "RocketLeftWingWing", "RocketRightWingWing" };
+    protected string[] weaponNames = { "Rockets", "AutoCanons", "Zapper" };
 
     [SerializeField] List<GameObject> weapons = new List<GameObject>();
     [SerializeField] List<Transform> bulletSpawn = new List<Transform>();
@@ -116,11 +116,11 @@ public class Shooting : MonoBehaviour
 
     }
 
-    void PrepareBullets(float bulletSpeed, GameObject bulletPrefab, int stopIterating)
+    protected void PrepareBullets(float bulletSpeed, GameObject bulletPrefab, int stopIterating, bool isPlayer = true)
     {
         for (int i = 0; i < bulletSpawn.Count && i <= stopIterating; i++)
         {
-            StartCoroutine(CreateBulletWithDelay(bulletSpeed, bulletPrefab, bulletSpawn[i].transform, i));
+            StartCoroutine(CreateBulletWithDelay(bulletSpeed, bulletPrefab, bulletSpawn[i].transform, i, isPlayer));
         }
     }
 
@@ -166,7 +166,7 @@ public class Shooting : MonoBehaviour
         }
     }
 
-    IEnumerator CreateBulletWithDelay(float bulletSpeed, GameObject bulletPrefab, Transform spawnTransform, int index)
+    IEnumerator CreateBulletWithDelay(float bulletSpeed, GameObject bulletPrefab, Transform spawnTransform, int index, bool isPlayer)
     {
         float delay = 0f;
         Vector3 offset = new Vector3(0f, 0f, 0f);
@@ -197,7 +197,15 @@ public class Shooting : MonoBehaviour
         //any type of weapon
         GameObject bullet = Instantiate(bulletPrefab, spawnTransform.position + offset, spawnTransform.rotation);
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-        rb.velocity = spawnTransform.up * bulletSpeed;
 
+        if(isPlayer)
+        {
+            rb.velocity = spawnTransform.up * bulletSpeed;
+
+        }
+        else
+        {
+            rb.velocity = new Vector3(0f,0f,0f);
+        }
     }
 }

@@ -8,11 +8,12 @@ public class EnemySpawn : MonoBehaviour
     GameObject player;
     [SerializeField] List<GameObject> enemies = new List<GameObject>();
 
-    float spawnInterval = 5f; 
+    float spawnInterval = 4f; 
     float timer = 0f;
+    float gameTimer = 0f;
 
-    float minX = -1.7f; 
-    float maxX = 1.7f; 
+    float minX = -1.3f; 
+    float maxX = 1.3f; 
 
 
     void Start()
@@ -22,12 +23,23 @@ public class EnemySpawn : MonoBehaviour
 
     void Update()
     {
+        gameTimer += Time.deltaTime;
         timer += Time.deltaTime;
 
         if (timer >= spawnInterval)
         {
             Spawn();
             timer = 0f; 
+        }
+
+        if(gameTimer > 10f && gameTimer < 20f)
+        {
+            spawnInterval = 3f;
+        }
+
+        else if (gameTimer > 20f)
+        {
+            spawnInterval = 1f;
         }
     }
 

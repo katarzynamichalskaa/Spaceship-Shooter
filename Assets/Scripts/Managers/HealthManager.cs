@@ -24,6 +24,7 @@ public class HealthManager : MonoBehaviour
         spriteRenderer = GameObject.Find("Damage").GetComponent<SpriteRenderer>();
         //sprite without any damage
         spriteRenderer.sprite = sprites[3];
+
         menu = GameObject.Find("Menu").GetComponent<Button>();
         currentHealth = maxHealth;
         AddToList(heartNames);
@@ -32,12 +33,12 @@ public class HealthManager : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Enemy") && !isInvulnerable)
+        if ((collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("PlayerBullet")) && !isInvulnerable)
         {
             Destroy(collision.gameObject);
             TakeDamage();
         }
-        else if(collision.gameObject.CompareTag("Enemy") && isInvulnerable)
+        else if((collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("PlayerBullet")) && isInvulnerable)
         {
             Destroy(collision.gameObject);
         }
