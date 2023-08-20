@@ -6,6 +6,9 @@ TagManager:
   tags:
   - PlayerBullet
   - Enemy
+  - SlowDown
+  - Shield
+  - KillTouched
   layers:
   - Default
   - TransparentFX

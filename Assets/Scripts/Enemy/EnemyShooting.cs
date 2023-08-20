@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class EnemyShooting : Shooting
 {
-    float spawnInterval = 1f;
+    MusicManager musicManager;
+    float spawnInterval = 1.5f;
     float timer = 0f;
 
     void Start()
     {
         wingsNames = null;
         weaponNames = null;
+        musicManager = GameObject.Find("MusicManager").GetComponent<MusicManager>();
     }
     void Update()
     {
@@ -18,7 +20,8 @@ public class EnemyShooting : Shooting
 
         if (timer >= spawnInterval)
         {
-            PrepareBullets(30f, bulletPrefab, 1, false);
+            musicManager.PlaySoundEffect("Laser3");
+            PrepareBullets(15f, bulletPrefab, 1, false);
             timer = 0f;
         }
     }

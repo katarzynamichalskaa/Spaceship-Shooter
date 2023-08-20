@@ -2509,6 +2509,14 @@ MonoBehaviour:
   - {fileID: 8300000, guid: bef0cef2ded0f0645ad90c6e5bdd4965, type: 3}
   - {fileID: 8300000, guid: 35967e8a4dfb1664e9b066939272c0a4, type: 3}
   - {fileID: 8300000, guid: 1f2ad53bacc245642854dbdc8ea71a9b, type: 3}
+  soundEffectsTracks:
+  - {fileID: 8300000, guid: 35a28aef877526743a80df92f581162e, type: 3}
+  - {fileID: 8300000, guid: 735514d800f246c4a9744bf0cd7cd620, type: 3}
+  - {fileID: 8300000, guid: 2d42fa9fc67a50d4dae2171dd6533a3a, type: 3}
+  - {fileID: 8300000, guid: 47a33a2d1fb2a82409660e8edd26f14c, type: 3}
+  - {fileID: 8300000, guid: 40d9ccd79cfb1214e8f9dd6a63d91a93, type: 3}
+  - {fileID: 8300000, guid: c1a14d7b1b12111449336331a81ec5a2, type: 3}
+  - {fileID: 8300000, guid: daf0779fa1fa53a418a0142eadc06ceb, type: 3}
 --- !u!4 &1999391891
 Transform:
   m_ObjectHideFlags: 0

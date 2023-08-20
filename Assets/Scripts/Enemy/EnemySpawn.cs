@@ -12,8 +12,8 @@ public class EnemySpawn : MonoBehaviour
     float timer = 0f;
     float gameTimer = 0f;
 
-    float minX = -1.3f; 
-    float maxX = 1.3f; 
+    float minX = -1.2f; 
+    float maxX = 1.2f; 
 
 
     void Start()

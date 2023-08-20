@@ -9,8 +9,9 @@ public class Shooting : MonoBehaviour
     [SerializeField] GameObject autocanonsBulletPrefab;
     [SerializeField] GameObject zapperBulletPrefab;
     HealthManager healthManager;
+    MusicManager musicManager;
     float lastShootTime;
-    float shootInterval = 0.5f;
+    float shootInterval = 0.75f;
     float bulletSpeed = 20f;
     bool changed = true;
     protected string[] wingsNames = { "LeftWing", "RightWing", "RocketLeftWing", "RocketRightWing", "RocketLeftWingWing", "RocketRightWingWing" };
@@ -31,6 +32,7 @@ public class Shooting : MonoBehaviour
         SetActive(weapons, false);
 
         healthManager = GameObject.Find("Player").GetComponent<HealthManager>();
+        musicManager = GameObject.Find("MusicManager").GetComponent<MusicManager>();
 
         changed = true;
 
@@ -81,11 +83,12 @@ public class Shooting : MonoBehaviour
 
     void Shoot()
     {
+        musicManager.PlaySoundEffect("Laser1");
+
         if (currentWeapon == EquippedWeapon.None)
         {
             bulletSpeed = 20f;
             PrepareBullets(bulletSpeed, bulletPrefab, 1);
-
         }
 
         if (currentWeapon == EquippedWeapon.Rockets)
@@ -205,7 +208,7 @@ public class Shooting : MonoBehaviour
         }
         else
         {
-            rb.velocity = new Vector3(0f,0f,0f);
+            rb.velocity = new Vector3(0f, -bulletSpeed, 0f);
         }
     }
 }

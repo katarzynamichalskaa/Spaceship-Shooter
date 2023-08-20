@@ -11,8 +11,11 @@ public class HealthManager : MonoBehaviour
     [SerializeField] RewardedAdsButton rewardedAdsButton;
     [SerializeField] Button menu;
     SpriteRenderer spriteRenderer;
+    MusicManager musicManager;
     List<GameObject> hearts = new List<GameObject>();
+    List<GameObject> shields = new List<GameObject>();
     string[] heartNames = { "Hearth1", "Hearth2", "Hearth3"};
+    string[] shieldNames = { "Front Shield Variant", "Round Shield Variant", "Invincibility Shield Variant" };
     float invulnerabilityDuration = 1.5f;
     int maxHealth = 3;
     static int currentHealth;
@@ -25,9 +28,13 @@ public class HealthManager : MonoBehaviour
         //sprite without any damage
         spriteRenderer.sprite = sprites[3];
 
+        musicManager = GameObject.Find("MusicManager").GetComponent<MusicManager>();
         menu = GameObject.Find("Menu").GetComponent<Button>();
+
         currentHealth = maxHealth;
-        AddToList(heartNames);
+        AddToList(heartNames, hearts);
+        AddToList(shieldNames, shields);
+        SetActive(shields, false);
         rewardedAdsButton.SetActive(false);
     }
 
@@ -42,10 +49,31 @@ public class HealthManager : MonoBehaviour
         {
             Destroy(collision.gameObject);
         }
+        else if(collision.gameObject.CompareTag("SlowDown"))
+        {
+            musicManager.PlaySoundEffect("Item1");
+            shields[0].SetActive(true);
+            Time.timeScale = 0.5f;
+            Destroy(collision.gameObject);
+        }
+        else if(collision.gameObject.CompareTag("Shield"))
+        {
+            musicManager.PlaySoundEffect("Item1");
+            shields[2].SetActive(true);
+            currentHealth = currentHealth + 1;
+            Destroy(collision.gameObject);
+        }
+        else if(collision.gameObject.CompareTag("KillTouched"))
+        {
+            musicManager.PlaySoundEffect("Item1");
+            shields[1].SetActive(true);
+            Destroy(collision.gameObject);
+        }
     }
 
     private void TakeDamage()
     {
+        musicManager.PlaySoundEffect("Lose4");
         currentHealth--;
         UpdateHearts();
 
@@ -74,6 +102,7 @@ public class HealthManager : MonoBehaviour
     private void Die()
     {
         //open ad
+        musicManager.PlaySoundEffect("Lose2");
         rewardedAdsButton.SetActive(true);
         Time.timeScale = 0f;
         menu.gameObject.SetActive(false);
@@ -84,16 +113,22 @@ public class HealthManager : MonoBehaviour
         isInvulnerable = false;
     }
 
-    void AddToList(string[] names)
+    void AddToList(string[] names, List<GameObject> list)
     {
         foreach (string obj in names)
         {
             GameObject gm = GameObject.Find(obj);
-            hearts.Add(gm);
+            list.Add(gm);
         }
-
     }
 
+    public void SetActive(List<GameObject> list, bool active)
+    {
+        foreach (GameObject gameObject in list)
+        {
+            gameObject.SetActive(active);
+        }
+    }
     private IEnumerator ResetInvulnerability(Material material, Color blinkColor)
     {
         Color originalColor = material.color;
@@ -110,12 +145,17 @@ public class HealthManager : MonoBehaviour
 
     public void PlayerReward()
     {
+        musicManager.PlaySoundEffect("Life2");
+
         rewardedAdsButton.SetActive(false);
         menu.gameObject.SetActive(true);
         Time.timeScale = 1f;
         currentHealth = 1;
         UpdateHearts();
 
+        isInvulnerable = true;
+        StartCoroutine(ResetInvulnerability(GameObject.Find("Damage").GetComponent<Renderer>().material, new Color(1.0f, 0.2f, 0.0f, 0.8f)));
+        Invoke("ResetInvulnerability", invulnerabilityDuration);
     }
 
     public static int ReturnCurrentHealth()
