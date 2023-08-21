@@ -8,7 +8,7 @@ public class BackgroundLoop : MonoBehaviour
     [SerializeField] GameObject[] backgrounds;
     private Camera mainCamera;
     private Vector2 screenBounds;
-    float scrollSpeed = 10f;
+    float scrollSpeed = 12f;
 
     private bool isFading = false;
 
@@ -80,7 +80,7 @@ public class BackgroundLoop : MonoBehaviour
     {
         timer += Time.deltaTime;
 
-        if(timer > 0) 
+        if (timer > 0) 
         {
             foreach (GameObject obj in backgrounds)
             {
@@ -88,22 +88,40 @@ public class BackgroundLoop : MonoBehaviour
             }
         }
 
-        if (timer > 5 && timer < 10)
+        //fade timing
+        if (timer > 40 && timer < 45)
         {
-            scrollSpeed = 12f;
             Fade(0);
         }
 
-        if(timer > 15 && timer < 25 )
+        if(timer > 80 && timer < 85 )
         {
-            scrollSpeed = 15f;
             Fade(1);
         }
 
-        if (timer > 30 && timer < 35)
+        if (timer > 120 && timer < 125)
         {
-            scrollSpeed = 20f;
             Fade(2);
+        }
+
+        //scroll speed
+        if (timer > 20f && timer < 30f)
+        {
+            scrollSpeed = 15f;
+        }
+
+        else if (timer > 30f && timer < 60f)
+        {
+            scrollSpeed = 18f;
+        }
+
+        else if (timer > 60 && timer < 120f)
+        {
+            scrollSpeed = 23f;
+        }
+        else if (timer > 120f)
+        {
+            scrollSpeed = 26f;
         }
     }
 

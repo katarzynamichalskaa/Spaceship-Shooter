@@ -4,7 +4,7 @@ public class PlayerMovement : MonoBehaviour
 {
     HealthManager healthManager;
 
-    float scrollSpeed = 10f;
+    float scrollSpeed = 12f;
     float maxHorizontalOffset = 0.25f;
     float horizontalSmoothing = 0.85f;
     private float currentHorizontalOffset;
@@ -20,21 +20,6 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         timer += Time.deltaTime;
-        
-        if (timer > 5 && timer < 10)
-        {
-            scrollSpeed = 12f;
-        }
-
-        if (timer > 15 && timer < 25)
-        {
-            scrollSpeed = 15f;
-        }
-
-        if (timer > 30 && timer < 35)
-        {
-            scrollSpeed = 20f;
-        }
 
         if (HealthManager.ReturnCurrentHealth() <= 0)
         {
@@ -46,7 +31,28 @@ public class PlayerMovement : MonoBehaviour
             MoveForward();
             MoveSideways();
         }
+
+        //scroll speed
+        if (timer > 20f && timer < 30f)
+        {
+            scrollSpeed = 15f;
+        }
+
+        else if (timer > 30f && timer < 60f)
+        {
+            scrollSpeed = 18f;
+        }
+
+        else if (timer > 60 && timer < 120f)
+        {
+            scrollSpeed = 23f;
+        }
+        else if (timer > 120f)
+        {
+            scrollSpeed = 26f;
+        }
     }
+
 
     void MoveForward()
     {

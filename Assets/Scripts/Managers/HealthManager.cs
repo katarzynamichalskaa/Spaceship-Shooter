@@ -13,9 +13,7 @@ public class HealthManager : MonoBehaviour
     SpriteRenderer spriteRenderer;
     MusicManager musicManager;
     List<GameObject> hearts = new List<GameObject>();
-    List<GameObject> shields = new List<GameObject>();
     string[] heartNames = { "Hearth1", "Hearth2", "Hearth3"};
-    string[] shieldNames = { "Front Shield Variant", "Round Shield Variant", "Invincibility Shield Variant" };
     float invulnerabilityDuration = 1.5f;
     int maxHealth = 3;
     static int currentHealth;
@@ -33,8 +31,6 @@ public class HealthManager : MonoBehaviour
 
         currentHealth = maxHealth;
         AddToList(heartNames, hearts);
-        AddToList(shieldNames, shields);
-        SetActive(shields, false);
         rewardedAdsButton.SetActive(false);
     }
 
@@ -47,26 +43,6 @@ public class HealthManager : MonoBehaviour
         }
         else if((collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("PlayerBullet")) && isInvulnerable)
         {
-            Destroy(collision.gameObject);
-        }
-        else if(collision.gameObject.CompareTag("SlowDown"))
-        {
-            musicManager.PlaySoundEffect("Item1");
-            shields[0].SetActive(true);
-            Time.timeScale = 0.5f;
-            Destroy(collision.gameObject);
-        }
-        else if(collision.gameObject.CompareTag("Shield"))
-        {
-            musicManager.PlaySoundEffect("Item1");
-            shields[2].SetActive(true);
-            currentHealth = currentHealth + 1;
-            Destroy(collision.gameObject);
-        }
-        else if(collision.gameObject.CompareTag("KillTouched"))
-        {
-            musicManager.PlaySoundEffect("Item1");
-            shields[1].SetActive(true);
             Destroy(collision.gameObject);
         }
     }

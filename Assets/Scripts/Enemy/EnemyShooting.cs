@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyShooting : Shooting
 {
     MusicManager musicManager;
-    float spawnInterval = 1.5f;
+    float spawnInterval = 1f;
     float timer = 0f;
 
     void Start()
@@ -21,7 +21,7 @@ public class EnemyShooting : Shooting
         if (timer >= spawnInterval)
         {
             musicManager.PlaySoundEffect("Laser3");
-            PrepareBullets(15f, bulletPrefab, 1, false);
+            PrepareBullets(20f, bulletPrefab, 1, false);
             timer = 0f;
         }
     }

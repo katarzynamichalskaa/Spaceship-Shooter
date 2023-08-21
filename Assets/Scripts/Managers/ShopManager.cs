@@ -36,7 +36,7 @@ public class ShopManager : MonoBehaviour
             autocanonsPrice = GameObject.Find("AutocanonsPrice").GetComponent<Text>();
             zapperPrice = GameObject.Find("ZapperPrice").GetComponent<Text>();
 
-            UpdateRocketPriceText("100000 $", "2000000 $", "30000000 $");
+            UpdateRocketPriceText("1000 $", "20000 $", "300000 $");
         }
     }
 
@@ -66,7 +66,7 @@ public class ShopManager : MonoBehaviour
         {
             moneyManager = GameObject.Find("MoneyManager").GetComponent<MoneyManager>();
 
-            bool purchased = moneyManager.Purchase(100000);
+            bool purchased = moneyManager.Purchase(1000);
             if(purchased)
             {
                 rocketsBought = true;
@@ -91,7 +91,7 @@ public class ShopManager : MonoBehaviour
         {
             moneyManager = GameObject.Find("MoneyManager").GetComponent<MoneyManager>();
 
-            bool purchased = moneyManager.Purchase(2000000);
+            bool purchased = moneyManager.Purchase(20000);
             if(purchased)
             {
                 autocanonsBought = true;
@@ -116,7 +116,7 @@ public class ShopManager : MonoBehaviour
         {
             moneyManager = GameObject.Find("MoneyManager").GetComponent<MoneyManager>();
 
-            bool purchased = moneyManager.Purchase(30000000);
+            bool purchased = moneyManager.Purchase(300000);
             if(purchased)
             {
                 zapperBought = true;

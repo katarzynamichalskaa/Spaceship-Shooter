@@ -93,7 +93,7 @@ public class ScoreManager : MonoBehaviour
 
     public int ReturnEarnedCoins()
     {
-        coinsEarned = score / 100;
+        coinsEarned = score / 50;
 
         return coinsEarned;
     }

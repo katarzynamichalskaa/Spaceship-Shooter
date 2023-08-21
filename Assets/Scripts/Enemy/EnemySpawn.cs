@@ -8,12 +8,12 @@ public class EnemySpawn : MonoBehaviour
     GameObject player;
     [SerializeField] List<GameObject> enemies = new List<GameObject>();
 
-    float spawnInterval = 4f; 
+    float spawnInterval = 2f; 
     float timer = 0f;
     float gameTimer = 0f;
 
-    float minX = -1.2f; 
-    float maxX = 1.2f; 
+    float minX = -1.7f; 
+    float maxX = 1.7f; 
 
 
     void Start()
@@ -32,14 +32,23 @@ public class EnemySpawn : MonoBehaviour
             timer = 0f; 
         }
 
-        if(gameTimer > 10f && gameTimer < 20f)
+        if(gameTimer > 20f && gameTimer < 30f)
         {
-            spawnInterval = 3f;
+            spawnInterval = 1.5f;
         }
 
-        else if (gameTimer > 20f)
+        else if (gameTimer > 30f && gameTimer < 60f)
         {
             spawnInterval = 1f;
+        }
+        
+        else if (gameTimer > 60 && gameTimer < 120f)
+        {
+            spawnInterval = 0.75f;
+        }
+        else if(gameTimer > 120f)
+        {
+            spawnInterval = 0.5f;
         }
     }
 
@@ -50,7 +59,7 @@ public class EnemySpawn : MonoBehaviour
 
         //spawn position
         float randomX = UnityEngine.Random.Range(minX, maxX);
-        Vector3 spawnPosition = player.transform.position + Vector3.up * 10f + new Vector3(randomX, 0f, 0f);
+        Vector3 spawnPosition = new Vector3(randomX, player.transform.position.y + 10f, 0f);
 
         GameObject enemyPrefab = enemies[randomIndex];
 

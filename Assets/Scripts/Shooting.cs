@@ -11,8 +11,8 @@ public class Shooting : MonoBehaviour
     HealthManager healthManager;
     MusicManager musicManager;
     float lastShootTime;
-    float shootInterval = 0.75f;
-    float bulletSpeed = 20f;
+    float shootInterval = 0.5f;
+    float bulletSpeed = 30f;
     bool changed = true;
     protected string[] wingsNames = { "LeftWing", "RightWing", "RocketLeftWing", "RocketRightWing", "RocketLeftWingWing", "RocketRightWingWing" };
     protected string[] weaponNames = { "Rockets", "AutoCanons", "Zapper" };
@@ -87,12 +87,12 @@ public class Shooting : MonoBehaviour
 
         if (currentWeapon == EquippedWeapon.None)
         {
-            bulletSpeed = 20f;
             PrepareBullets(bulletSpeed, bulletPrefab, 1);
         }
 
         if (currentWeapon == EquippedWeapon.Rockets)
         {
+            shootInterval = 0.75f;
             PrepareBullets(bulletSpeed, bulletPrefab, bulletSpawn.Count);
             animators[0].enabled = true;
             animators[0].speed = 2.5f;
@@ -109,7 +109,6 @@ public class Shooting : MonoBehaviour
         if (currentWeapon == EquippedWeapon.Zapper)
         {
             shootInterval = 0.3f;
-            bulletSpeed = 20f;
             PrepareBullets(bulletSpeed, zapperBulletPrefab, 1);
             animators[2].enabled = true;
             animators[2].speed = 3f;
