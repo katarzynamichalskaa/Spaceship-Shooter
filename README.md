@@ -1,4 +1,4 @@
-# Prototype
+# Spaceship Shooter
 Spaceship Shooter is an engaging 2D mobile game built with Unity, offering an immersive experience where players control a spaceship by tilting their phones left and right to navigate through obstacles and avoid enemy spacecraft. The game combines fast-paced action with intuitive controls, providing an enjoyable gaming experience for players of all skill levels.
 
 ## Key Features
